@@ -1,11 +1,11 @@
-import java.util.ArrayList;
-
 public class StudentManagementSystem {
-    // Central storage for all registered students.
-    private ArrayList<Student> students;
+    private Student[] students;
+    private int studentCount;
+    private static final int MAX_STUDENTS = 1000;
 
     public StudentManagementSystem() {
-        students = new ArrayList<>();
+        this.students = new Student[MAX_STUDENTS];
+        this.studentCount = 0;
     }
 
     public void addStudent(Student student) {
@@ -15,7 +15,11 @@ public class StudentManagementSystem {
         if (findStudentById(student.getId()) != null) {
             throw new IllegalArgumentException("A student with this ID already exists.");
         }
-        students.add(student);
+        if (studentCount >= MAX_STUDENTS) {
+            throw new IllegalArgumentException("System is full");
+        }
+        students[studentCount] = student;
+        studentCount++;
     }
 
     public void assignSubjectToStudent(int studentId, Subject subject) {
@@ -43,33 +47,32 @@ public class StudentManagementSystem {
     }
 
     public void displayAllStudents() {
-        if (students.isEmpty()) {
+        if (studentCount == 0) {
             System.out.println("No students registered yet.");
             return;
         }
 
-        for (Student student : students) {
+        for (int i = 0; i < studentCount; i++) {
             System.out.println("------------------------");
-            student.displayStudentInfo();
+            students[i].displayStudentInfo();
         }
         System.out.println("------------------------");
     }
 
     public void calculateHighestGPA() {
-        if (students.isEmpty()) {
+        if (studentCount == 0) {
             System.out.println("No students available.");
             return;
         }
 
-        // Track best performer while scanning once through the list.
         Student topStudent = null;
         double highestGPA = -1;
 
-        for (Student student : students) {
-            double gpa = student.calculateGPA();
+        for (int i = 0; i < studentCount; i++) {
+            double gpa = students[i].calculateGPA();
             if (gpa > highestGPA) {
                 highestGPA = gpa;
-                topStudent = student;
+                topStudent = students[i];
             }
         }
 
@@ -97,12 +100,46 @@ public class StudentManagementSystem {
     }
 
     public Student findStudentById(int id) {
-        // Linear lookup is enough for current project size.
-        for (Student student : students) {
-            if (student.getId() == id) {
-                return student;
+        for (int i = 0; i < studentCount; i++) {
+            if (students[i].getId() == id) {
+                return students[i];
             }
         }
         return null;
+    }
+
+    public boolean removeStudent(int id) {
+        for (int i = 0; i < studentCount; i++) {
+            if (students[i].getId() == id) {
+                for (int j = i; j < studentCount - 1; j++) {
+                    students[j] = students[j + 1];
+                }
+                students[studentCount - 1] = null;
+                studentCount--;
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public Student getTopGPAStudent() {
+        if (studentCount == 0) {
+            return null;
+        }
+        Student top = students[0];
+        for (int i = 1; i < studentCount; i++) {
+            if (students[i].calculateGPA() > top.calculateGPA()) {
+                top = students[i];
+            }
+        }
+        return top;
+    }
+
+    public Student[] getAllStudents() {
+        Student[] result = new Student[studentCount];
+        for (int i = 0; i < studentCount; i++) {
+            result[i] = students[i];
+        }
+        return result;
     }
 }
