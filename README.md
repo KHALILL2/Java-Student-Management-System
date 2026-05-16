@@ -98,10 +98,16 @@ Application entry point and menu controller:
 
 ## GPA Logic
 
-The GPA is calculated as a weighted average:
+The GPA is calculated as a weighted average using a precise, continuous **4.0 scale**:
+
+1. Each 0-100 percentage grade is mapped to a grade point:
+   - `90 - 100` -> `4.0`
+   - `60 - 89` -> Continuous scale from `1.0` to `3.9` (e.g. `85` becomes `3.5`)
+   - `< 60` -> `0.0`
+2. The grade points are then multiplied by credit hours.
 
 \[
-\text{GPA} = \frac{\sum(\text{grade} \times \text{creditHours})}{\sum(\text{creditHours})}
+\text{GPA} = \frac{\sum(\text{gradePoint} \times \text{creditHours})}{\sum(\text{creditHours})}
 \]
 
 If a student has no subjects, GPA is returned as `0.0`.
@@ -135,17 +141,15 @@ Implemented in `convertToLetterGrade(double grade)`:
 
 ## Build and Run
 
-From inside the project folder:
-
+**Using the included batch script (Windows):**
+Simply execute the batch script in your terminal to automatically compile and run:
 ```bash
-javac *.java
-java Main
+.\run.bat
 ```
 
-On Windows PowerShell:
+**Manually from the command line:**
 
-```powershell
-Set-Location "c:\.vscode\Java Project"
+```bash
 javac *.java
 java Main
 ```

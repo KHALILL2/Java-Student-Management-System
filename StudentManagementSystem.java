@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 
 class StudentManagementSystem {
-   private ArrayList<Student> students = new ArrayList();
+   private ArrayList<Student> students = new ArrayList<>();
 
    StudentManagementSystem() {
    }
@@ -60,5 +60,58 @@ class StudentManagementSystem {
       }
 
       return var1;
+   }
+
+   public void displayAllStudents() {
+      Student[] all = getAllStudents();
+      if (all.length == 0) {
+         System.out.println("No students in the system.");
+         return;
+      }
+      for (Student s : all) {
+         s.displayStudentInfo();
+         System.out.println("-------------------------");
+      }
+   }
+
+   public void calculateHighestGPA() {
+      Student top = getTopGPAStudent();
+      if (top != null) {
+         System.out.println("Student with highest GPA:");
+         top.displayStudentInfo();
+      } else {
+         System.out.println("No students available.");
+      }
+   }
+
+   public Student findStudentById(int id) {
+      return getStudentById(id);
+   }
+
+   public void assignSubjectToStudent(int id, Subject subject) {
+      Student s = getStudentById(id);
+      if (s != null) {
+         s.addSubject(subject);
+      }
+   }
+
+   public void displayStudentInfo(int id) {
+      Student s = getStudentById(id);
+      if (s != null) {
+         s.displayStudentInfo();
+      }
+   }
+
+   public double calculateStudentGPA(int id) {
+      Student s = getStudentById(id);
+      return s != null ? s.calculateGPA() : 0.0;
+   }
+
+   public String convertToLetterGrade(double grade) {
+      if (grade >= 90) return "A";
+      if (grade >= 80) return "B";
+      if (grade >= 70) return "C";
+      if (grade >= 60) return "D";
+      return "F";
    }
 }

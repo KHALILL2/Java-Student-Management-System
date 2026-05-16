@@ -1,7 +1,7 @@
+
 // استدعااء كلاس جاهزه  Array list 
 // لتخزين البيانات مكتبه جاهزه 
 import java.util.ArrayList;
-
 
 /**
  * Represents a student in the system.
@@ -11,11 +11,11 @@ public class Student {
     private int id;
     private String name;
     private String major;
-       // قائمة المواد المسجل بها الطالب
+    // قائمة المواد المسجل بها الطالب
     private ArrayList<Subject> subjects;
 
     // Constructorلإنشاء طالب جديد
-  
+
     public Student(int id, String name, String major) {
         setId(id);
         setName(name);
@@ -26,11 +26,21 @@ public class Student {
 
     // Getters
     // لإرجاع بيانات الطالب
-    public int getId()    { return id; }
-    public String getName()  { return name; }
-    public String getMajor() { return major; }
-      
-    public ArrayList<Subject> getSubjects() { return subjects; }
+    public int getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getMajor() {
+        return major;
+    }
+
+    public ArrayList<Subject> getSubjects() {
+        return subjects;
+    }
 
     // Setters مع شروط التحقق (Validation) للحفاظ على متانة الكود
     public void setId(int id) {
@@ -54,36 +64,46 @@ public class Student {
         this.major = major.trim();
     }
 
-    
-     
-     // إضافة مادة جديدة للطالب
-    public void addSubject(Subject subject) {       
+    // إضافة مادة جديدة للطالب
+    public void addSubject(Subject subject) {
         if (subject == null) {
             throw new IllegalArgumentException("Subject cannot be null.");
         }
         subjects.add(subject);
     }
-/*
-حساب المعدل التراكمي GPA
-باستخدام المتوسط المرجح حسب عدد الساعات
-ولو مفيش مواد بيرجع 0
-*/
+
+    /*
+     * حساب المعدل التراكمي GPA
+     * باستخدام المتوسط المرجح حسب عدد الساعات
+     * ولو مفيش مواد بيرجع 0
+     */
+    private double getGradePoint(double grade) {
+        if (grade >= 90)
+            return 4.0;
+        if (grade < 60)
+            return 0.0;
+            
+        // Converts 60-89 into 1.0 to 3.9 precisely
+        return 1.0 + (grade - 60) * 0.1;
+    }
+
     public double calculateGPA() {
-        if (subjects.isEmpty()) return 0.0;
+        if (subjects.isEmpty())
+            return 0.0;
 
         double totalPoints = 0;
-        int    totalCredits = 0;
+        int totalCredits = 0;
 
         // المرور على كل المواد لحساب المجموع
         for (Subject s : subjects) {
-            totalPoints  += s.getGrade() * s.getCreditHours();
+            totalPoints += getGradePoint(s.getGrade()) * s.getCreditHours();
             totalCredits += s.getCreditHours();
         }
 
         return totalCredits == 0 ? 0.0 : totalPoints / totalCredits;
     }
 
-     // عرض بيانات الطالب والمواد المسجل بها
+    // عرض بيانات الطالب والمواد المسجل بها
     public void displayStudentInfo() {
         System.out.println("Student ID : " + id);
         System.out.println("Name       : " + name);
@@ -92,7 +112,7 @@ public class Student {
         if (subjects.isEmpty()) {
             System.out.println("Subjects   : No subjects enrolled yet.");
         } else {
-              // طباعة جميع المواد
+            // طباعة جميع المواد
             System.out.println("Subjects   :");
             for (Subject s : subjects) {
                 System.out.println("  - " + s);
