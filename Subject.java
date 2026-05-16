@@ -1,12 +1,14 @@
 /*
  * Subject class represents a university subject
- * with a subject name and grade.
+ * with a subject name, credit hours, and grade.
  */
 
 public class Subject {
 
     // Subject name
     private String subjectName;
+    // Credit hours for GPA calculation
+    private int creditHours;
 
     // Subject grade
     private double grade;
@@ -16,8 +18,9 @@ public class Subject {
      * Constructor
      * Used to create a new Subject object
      */
-    public Subject(String subjectName, double grade) {
+    public Subject(String subjectName, int creditHours, double grade) {
         setSubjectName(subjectName);
+        setCreditHours(creditHours);
         setGrade(grade);
     }
 
@@ -40,7 +43,26 @@ public class Subject {
             throw new IllegalArgumentException("Subject name cannot be empty.");
         }
 
-        this.subjectName = subjectName;
+        this.subjectName = subjectName.trim();
+    }
+
+
+    // Getter for credit hours
+    public int getCreditHours() {
+        return creditHours;
+    }
+
+
+    /*
+     * Setter for credit hours
+     * Validation:
+     * - Credit hours must be > 0
+     */
+    public void setCreditHours(int creditHours) {
+        if (creditHours <= 0) {
+            throw new IllegalArgumentException("Credit hours must be greater than 0.");
+        }
+        this.creditHours = creditHours;
     }
 
 
@@ -73,8 +95,9 @@ public class Subject {
     public String toString() {
 
         return String.format(
-                "Subject: %-15s Grade: %.2f",
+                "Subject: %-15s Credits: %-2d Grade: %.2f",
                 subjectName,
+                creditHours,
                 grade
         );
     }
