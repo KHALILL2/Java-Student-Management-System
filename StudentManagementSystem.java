@@ -1,145 +1,64 @@
-public class StudentManagementSystem {
-    private Student[] students;
-    private int studentCount;
-    private static final int MAX_STUDENTS = 1000;
+import java.util.ArrayList;
 
-    public StudentManagementSystem() {
-        this.students = new Student[MAX_STUDENTS];
-        this.studentCount = 0;
-    }
+class StudentManagementSystem {
+   private ArrayList<Student> students = new ArrayList();
 
-    public void addStudent(Student student) {
-        if (student == null) {
-            throw new IllegalArgumentException("Student cannot be null.");
-        }
-        if (findStudentById(student.getId()) != null) {
-            throw new IllegalArgumentException("A student with this ID already exists.");
-        }
-        if (studentCount >= MAX_STUDENTS) {
-            throw new IllegalArgumentException("System is full");
-        }
-        students[studentCount] = student;
-        studentCount++;
-    }
+   StudentManagementSystem() {
+   }
 
-    public void assignSubjectToStudent(int studentId, Subject subject) {
-        Student student = findStudentById(studentId);
-        if (student == null) {
-            throw new IllegalArgumentException("Student ID not found.");
-        }
-        student.addSubject(subject);
-    }
+   public void addStudent(Student var1) {
+      if (var1 != null) {
+         if (this.getStudentById(var1.getId()) != null) {
+            throw new IllegalArgumentException("ID already exists");
+         } else {
+            this.students.add(var1);
+         }
+      }
+   }
 
-    public double calculateStudentGPA(int studentId) {
-        Student student = findStudentById(studentId);
-        if (student == null) {
-            throw new IllegalArgumentException("Student ID not found.");
-        }
-        return student.calculateGPA();
-    }
+   public boolean removeStudent(int var1) {
+      Student var2 = this.getStudentById(var1);
+      if (var2 == null) {
+         return false;
+      } else {
+         this.students.remove(var2);
+         return true;
+      }
+   }
 
-    public void displayStudentInfo(int studentId) {
-        Student student = findStudentById(studentId);
-        if (student == null) {
-            throw new IllegalArgumentException("Student ID not found.");
-        }
-        student.displayStudentInfo();
-    }
+   public Student getStudentById(int var1) {
+      for(Student var3 : this.students) {
+         if (var3.getId() == var1) {
+            return var3;
+         }
+      }
 
-    public void displayAllStudents() {
-        if (studentCount == 0) {
-            System.out.println("No students registered yet.");
-            return;
-        }
+      return null;
+   }
 
-        for (int i = 0; i < studentCount; i++) {
-            System.out.println("------------------------");
-            students[i].displayStudentInfo();
-        }
-        System.out.println("------------------------");
-    }
+   public Student getTopGPAStudent() {
+      if (this.students.isEmpty()) {
+         return null;
+      } else {
+         Student var1 = (Student)this.students.get(0);
 
-    public void calculateHighestGPA() {
-        if (studentCount == 0) {
-            System.out.println("No students available.");
-            return;
-        }
-
-        Student topStudent = null;
-        double highestGPA = -1;
-
-        for (int i = 0; i < studentCount; i++) {
-            double gpa = students[i].calculateGPA();
-            if (gpa > highestGPA) {
-                highestGPA = gpa;
-                topStudent = students[i];
+         for(int var2 = 1; var2 < this.students.size(); ++var2) {
+            if (((Student)this.students.get(var2)).calculateGPA() > var1.calculateGPA()) {
+               var1 = (Student)this.students.get(var2);
             }
-        }
+         }
 
-        if (topStudent != null) {
-            System.out.printf("Highest GPA Student -> Name: %s, ID: %d, GPA: %.2f%n",
-                    topStudent.getName(), topStudent.getId(), highestGPA);
-        }
-    }
+         return var1;
+      }
+   }
 
-    public String convertToLetterGrade(double grade) {
-        if (grade < 0 || grade > 100) {
-            throw new IllegalArgumentException("Grade must be between 0 and 100.");
-        }
+   public Student[] getAllStudents() {
+      Student[] var1 = new Student[this.students.size()];
 
-        if (grade >= 90) {
-            return "A";
-        } else if (grade >= 80) {
-            return "B";
-        } else if (grade >= 70) {
-            return "C";
-        } else if (grade >= 60) {
-            return "D";
-        }
-        return "F";
-    }
+      for(int var2 = 0; var2 < this.students.size(); ++var2) {
+         var1[var2] = (Student)this.students.get(var2);
+      }
 
-    public Student findStudentById(int id) {
-        for (int i = 0; i < studentCount; i++) {
-            if (students[i].getId() == id) {
-                return students[i];
-            }
-        }
-        return null;
-    }
-
-    public boolean removeStudent(int id) {
-        for (int i = 0; i < studentCount; i++) {
-            if (students[i].getId() == id) {
-                for (int j = i; j < studentCount - 1; j++) {
-                    students[j] = students[j + 1];
-                }
-                students[studentCount - 1] = null;
-                studentCount--;
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public Student getTopGPAStudent() {
-        if (studentCount == 0) {
-            return null;
-        }
-        Student top = students[0];
-        for (int i = 1; i < studentCount; i++) {
-            if (students[i].calculateGPA() > top.calculateGPA()) {
-                top = students[i];
-            }
-        }
-        return top;
-    }
-
-    public Student[] getAllStudents() {
-        Student[] result = new Student[studentCount];
-        for (int i = 0; i < studentCount; i++) {
-            result[i] = students[i];
-        }
-        return result;
-    }
+      return var1;
+   }
 }
