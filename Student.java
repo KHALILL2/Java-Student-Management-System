@@ -8,7 +8,7 @@ import java.util.ArrayList;
  */
 public class Student {
 
-    private String id;
+    private int id;
     private String name;
     private String major;
        // قائمة المواد المسجل بها الطالب
@@ -16,27 +16,51 @@ public class Student {
 
     // Constructorلإنشاء طالب جديد
   
-    public Student(String id, String name, String major) {
-       
-        this.id       = id;
-        this.name     = name;
-        this.major    = major;
-          // إنشاء قائمة فارغة للمواد
-        this.subjects = new ArrayList<>();         
+    public Student(int id, String name, String major) {
+        setId(id);
+        setName(name);
+        setMajor(major);
+        // إنشاء قائمة فارغة للمواد
+        this.subjects = new ArrayList<>();
     }
 
     // Getters
     // لإرجاع بيانات الطالب
-    public String getId()    { return id; }
+    public int getId()    { return id; }
     public String getName()  { return name; }
     public String getMajor() { return major; }
       
     public ArrayList<Subject> getSubjects() { return subjects; }
 
+    // Setters مع شروط التحقق (Validation) للحفاظ على متانة الكود
+    public void setId(int id) {
+        if (id <= 0) {
+            throw new IllegalArgumentException("Student ID must be greater than 0.");
+        }
+        this.id = id;
+    }
+
+    public void setName(String name) {
+        if (name == null || name.trim().isEmpty()) {
+            throw new IllegalArgumentException("Student name cannot be empty.");
+        }
+        this.name = name.trim();
+    }
+
+    public void setMajor(String major) {
+        if (major == null || major.trim().isEmpty()) {
+            throw new IllegalArgumentException("Major cannot be empty.");
+        }
+        this.major = major.trim();
+    }
+
     
      
      // إضافة مادة جديدة للطالب
     public void addSubject(Subject subject) {       
+        if (subject == null) {
+            throw new IllegalArgumentException("Subject cannot be null.");
+        }
         subjects.add(subject);
     }
 /*
@@ -74,5 +98,6 @@ public class Student {
                 System.out.println("  - " + s);
             }
         }
+        System.out.printf("Current GPA: %.2f%n", calculateGPA());
     }
 }
